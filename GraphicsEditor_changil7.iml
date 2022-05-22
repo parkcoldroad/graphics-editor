@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="CheckStyle-IDEA-Module">
+    <option name="configuration">
+      <map />
+    </option>
+  </component>
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/../../OneDrive - 명지대학교/3학년1학기 백업/eclipse-workspace/GraphicsEditor_changil7/bin" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../OneDrive - 명지대학교/3학년1학기 백업/eclipse-workspace/GraphicsEditor_changil7">
+      <sourceFolder url="file://$MODULE_DIR$/../../OneDrive - 명지대학교/3학년1학기 백업/eclipse-workspace/GraphicsEditor_changil7/src" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="11" jdkType="JavaSDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

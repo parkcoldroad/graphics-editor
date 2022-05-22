@@ -319,22 +319,18 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 	}
 
 	public void undo() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void redo() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void copy() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void cut() {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -345,6 +341,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 	public void group() {
 		
 	}
+	
 	// Paint Components
 	public void paint(Graphics g) {
 		Graphics2D graphics2d = (Graphics2D) g;

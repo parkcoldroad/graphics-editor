@@ -17,7 +17,7 @@ public class EditMenu extends JMenu {
 
 	public EditMenu(String s) {
 		super(s);
-	
+
 		actionListener = new EditMenuHandler();
 
 		for (EEditMenuItem eEditItem : EEditMenuItem.values()) {
@@ -32,6 +32,30 @@ public class EditMenu extends JMenu {
 
 	public void associate(DrawingPanel drawingPanel) {
 		this.drawingPanel = drawingPanel;
+	}
+
+	public void undo() {
+		this.drawingPanel.undo();
+	}
+
+	public void redo() {
+		this.drawingPanel.redo();
+	}
+
+	public void copy() {
+		this.drawingPanel.copy();
+	}
+
+	public void cut() {
+		this.drawingPanel.cut();
+	}
+
+	public void paste() {
+		this.drawingPanel.paste();
+	}
+
+	public void group() {
+		this.drawingPanel.group();
 	}
 
 	private class EditMenuHandler implements ActionListener {
