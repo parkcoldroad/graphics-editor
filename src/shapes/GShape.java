@@ -17,14 +17,14 @@ abstract public class GShape implements Serializable {
 	protected int tMoveX, tMoveY;
 
 	// components
-	private boolean selected;
+	protected boolean selected;
 	private Color lineColor;
 	private Color fillColor;
 	private int stroke;
 
-	protected Shape shape; 
-	private GAnchor gAnchors;
-	private EAnchors eAnchors;
+	protected Shape shape;
+	protected GAnchor gAnchors;
+	protected EAnchors eAnchors;
 	private EDrawingStyle eDrawingStyle;
 
 	private AffineTransform af;
@@ -70,6 +70,8 @@ abstract public class GShape implements Serializable {
 			}
 			if (eAnchor == null) {
 				if (this.shape.contains(x, y)) {
+					return EOnState.eOnShape;
+				} else if (this.linecontains(x, y)) {
 					return EOnState.eOnShape;
 				}
 			} else {
@@ -140,9 +142,9 @@ abstract public class GShape implements Serializable {
 		af.setToTranslation(dw, dh);
 		this.shape = af.createTransformedShape(this.shape);
 	}
-	
+
 	public void resize(GResizerDto dto) {
-		if(dto != null) {
+		if (dto != null) {
 			af.setToTranslation(dto.getTx(), dto.getTy());
 			af.scale(dto.getSx(), dto.getSy());
 			af.translate(-(dto.getTx()), -(dto.getTy()));
@@ -151,11 +153,11 @@ abstract public class GShape implements Serializable {
 	}
 
 	public void rotate(double angle, Point rotatePoint) {
-		//setToRation = radian, rotate = degree
-    	af.setToRotation(Math.toRadians(angle), rotatePoint.getX(), rotatePoint.getY());
-    	this.shape = af.createTransformedShape(this.shape);
+		// setToRation = radian, rotate = degree
+		af.setToRotation(Math.toRadians(angle), rotatePoint.getX(), rotatePoint.getY());
+		this.shape = af.createTransformedShape(this.shape);
 	}
-	
+
 	public abstract void finishMoving(Graphics2D graphics2d, int x, int y);
 
 	public abstract void setInitPoint(int x1, int y1);
@@ -168,6 +170,16 @@ abstract public class GShape implements Serializable {
 
 	public abstract GShape clone();
 
-	
+	public boolean linecontains(int x, int y) {
+		boolean bContains = false;
+			if (this.shape.getBounds().contains(new Point(x, y))) {
+				bContains = true;
+				return bContains;
+			}
+			else {
+				bContains = false;
+				return bContains;
+			}
+	}
 
 }

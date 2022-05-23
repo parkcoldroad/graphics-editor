@@ -213,6 +213,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 	// methods
 	private void defineActionState(int x, int y) {
 		EOnState eOnState = onShape(x, y);
+		System.out.println(eOnState);
 		if (eOnState == null) {
 			this.clearSelected();
 			this.transformer = new GDrawer();
@@ -256,7 +257,6 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 				return eOnState;
 			}
 		}
-		// this.clearSelected();
 		return null;
 	}
 
@@ -264,56 +264,56 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		if (selectedShape != null) {
 			gAnchor = selectedShape.getGAnchor();
 			eAnchor = gAnchor.getSelectedAnchor(x, y);
-		}
-		if (eAnchor == null) {
-			eAnchor = GAnchor.EAnchors.MM;
-			return eAnchor;
-		} else {
 			return eAnchor;
 		}
-
+		else {
+			eAnchor = null;
+			return eAnchor;
+		}
 	}
 
 	public void changeCursor(int x, int y) {
 		if (geteCurrentState() == ECurrentState.eDrawing) {
 			this.setCursor(CursorManager.CROSSHAIR_CURSOR);
 		} else {
-			this.setCursor(CursorManager.DEFAULT_CURSOR);
 			this.eAnchor = confirmAnchorSelected(x, y);
-			if (this.selectedShape != null && selectedShape.isSelected()) {
-				switch (eAnchor) {
-				case NW:
-					this.setCursor(CursorManager.NW_CURSOR);
-					break;
-				case NN:
-					this.setCursor(CursorManager.NN_CURSOR);
-					break;
-				case NE:
-					this.setCursor(CursorManager.NE_CURSOR);
-					break;
-				case EE:
-					this.setCursor(CursorManager.EE_CURSOR);
-					break;
-				case SE:
-					this.setCursor(CursorManager.SE_CURSOR);
-					break;
-				case SS:
-					this.setCursor(CursorManager.SS_CURSOR);
-					break;
-				case SW:
-					this.setCursor(CursorManager.SW_CURSOR);
-					break;
-				case WW:
-					this.setCursor(CursorManager.WW_CURSOR);
-					break;
-				case RR:
-					this.setCursor(CursorManager.RR_CURSOR);
-					break;
-				case MM:
-					this.setCursor(CursorManager.DEFAULT_CURSOR);
-					break;
+			this.setCursor(CursorManager.DEFAULT_CURSOR);
+				if (this.eAnchor != null && selectedShape.isSelected()) {
+					switch (eAnchor) {
+					case NW:
+						this.setCursor(CursorManager.NW_CURSOR);
+						break;
+					case NN:
+						this.setCursor(CursorManager.NN_CURSOR);
+						break;
+					case NE:
+						this.setCursor(CursorManager.NE_CURSOR);
+						break;
+					case EE:
+						this.setCursor(CursorManager.EE_CURSOR);
+						break;
+					case SE:
+						this.setCursor(CursorManager.SE_CURSOR);
+						break;
+					case SS:
+						this.setCursor(CursorManager.SS_CURSOR);
+						break;
+					case SW:
+						this.setCursor(CursorManager.SW_CURSOR);
+						break;
+					case WW:
+						this.setCursor(CursorManager.WW_CURSOR);
+						break;
+					case RR:
+						this.setCursor(CursorManager.RR_CURSOR);
+						break;
+					default:
+						this.setCursor(CursorManager.DEFAULT_CURSOR);
+						break;
+					}
 				}
-			}
+			
+			
 		}
 
 	}
@@ -427,7 +427,6 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 					}
 				}
 			} else if (e.getButton() == MouseEvent.BUTTON3) {
-
 			}
 		}
 
