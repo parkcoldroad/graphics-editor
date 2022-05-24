@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
 	public MainFrame() {
 		//attribute
 		this.setSize(560, 600);
-		this.setTitle("제목 없음 - GraphicsEditor");
+		this.setTitle("No Title - GraphicsEditor");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		ImageIcon img = new ImageIcon("images/canvas.png");
 		this.setIconImage(img.getImage());	

@@ -12,17 +12,19 @@ import shapes.GPencil;
 import shapes.GPolygon;
 import shapes.GRectangle;
 import shapes.GShape;
+import shapes.GTextBox;
 
 public class Constants {
 
 	
 	public enum EShapes {
-		eGroup(new GGroup(), "images/drag.png", "images/drag-selected.png","선택",1),
-		eRectangle(new GRectangle(), "images/rectangle.png", "images/rectangle-selected.png","네모",0),
-		eOval(new GOval(), "images/oval.png", "images/oval-selected.png", "동그라미",0),
-		eLine(new GLine(), "images/line.png", "images/line-selected.png", "선",0),
-		ePolygon(new GPolygon(), "images/polygon.png", "images/polygon-selected.png", "폴리곤",0),
-		ePencil(new GPencil(), "images/pencil.png", "images/pencil-selected.png","연필",0);
+		eSelection(new GGroup(), "images/drag.png", "images/drag-selected.png","selection",1),
+		eRectangle(new GRectangle(), "images/rectangle.png", "images/rectangle-selected.png","rectangle",0),
+		eOval(new GOval(), "images/oval.png", "images/oval-selected.png", "oval",0),
+		eLine(new GLine(), "images/line.png", "images/line-selected.png", "line",0),
+		ePolygon(new GPolygon(), "images/polygon.png", "images/polygon-selected.png", "polygon",0),
+		eTextBox(new GTextBox(), "images/text.png", "images/text-selected.png", "text",0),
+		ePencil(new GPencil(), "images/pencil.png", "images/pencil-selected.png","pencil",0);
 		
 		private GShape shapeTool;
 		private String image;

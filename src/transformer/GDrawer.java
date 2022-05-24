@@ -7,6 +7,7 @@ public class GDrawer extends GTransformer{
 	@Override
 	public void initTransforming(int x, int y) {
 		this.getgShape().setInitPoint(x, y);
+		
 	}
 
 	@Override
@@ -21,4 +22,5 @@ public class GDrawer extends GTransformer{
 	public void continueTransforming(Graphics2D graphics2d, int x, int y) {
 		this.getgShape().addPoint(x, y);
 	}
+	
 }

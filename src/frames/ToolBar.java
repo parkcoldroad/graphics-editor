@@ -59,7 +59,7 @@ public class ToolBar extends JToolBar {
 
 	public void associate(DrawingPanel drawingPanel) {
 		this.drawingPanel = drawingPanel;
-		JRadioButton defaultBtn = ((JRadioButton) this.getComponent(EShapes.eGroup.ordinal()));
+		JRadioButton defaultBtn = ((JRadioButton) this.getComponent(EShapes.eSelection.ordinal()));
 		defaultBtn.doClick();
 		
 		this.addSeparator();

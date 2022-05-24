@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.io.Serializable;
@@ -131,7 +132,7 @@ abstract public class GShape implements Serializable {
 		graphics2d.setColor(this.lineColor);
 		graphics2d.draw(this.shape);
 		graphics2d.setStroke(new BasicStroke(1));
-
+		
 		if (this.selected) {
 			this.gAnchors.setBoundingRect(this.shape.getBounds());
 			this.gAnchors.draw(graphics2d);
@@ -158,6 +159,10 @@ abstract public class GShape implements Serializable {
 		this.shape = af.createTransformedShape(this.shape);
 	}
 
+	public Rectangle getBounds() {
+		return this.shape.getBounds();
+	}
+	
 	public abstract void finishMoving(Graphics2D graphics2d, int x, int y);
 
 	public abstract void setInitPoint(int x1, int y1);
@@ -171,15 +176,8 @@ abstract public class GShape implements Serializable {
 	public abstract GShape clone();
 
 	public boolean linecontains(int x, int y) {
-		boolean bContains = false;
-			if (this.shape.getBounds().contains(new Point(x, y))) {
-				bContains = true;
-				return bContains;
-			}
-			else {
-				bContains = false;
-				return bContains;
-			}
+			if (this.shape.getBounds().contains(new Point(x, y))) {return true;	}
+			else {	return false;}
 	}
 
 }
