@@ -7,6 +7,11 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import shapes.GAnchor.EAnchors;
@@ -28,7 +33,7 @@ abstract public class GShape implements Serializable {
 	protected EAnchors eAnchors;
 	private EDrawingStyle eDrawingStyle;
 
-	private AffineTransform af;
+	private AffineTransform af = null;
 
 	public enum EOnState {
 		eOnShape, eOnResize, eOnRotate;
@@ -63,6 +68,12 @@ abstract public class GShape implements Serializable {
 		return this.gAnchors;
 	}
 
+	public void verticalPaste() {
+		AffineTransform affineTransform = new AffineTransform();
+		affineTransform.translate(10, 10);
+		this.shape = affineTransform.createTransformedShape(this.shape);
+	}
+	
 	public EOnState onShape(int x, int y) {
 		if (this.selected) {
 			EAnchors eAnchor = this.gAnchors.onShape(x, y);
@@ -159,6 +170,21 @@ abstract public class GShape implements Serializable {
 		this.shape = af.createTransformedShape(this.shape);
 	}
 
+	public GShape cloneShapes() {
+		try {
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+			objectOutputStream.writeObject(this);
+
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+			ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+			return (GShape) objectInputStream.readObject();
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	public Rectangle getBounds() {
 		return this.shape.getBounds();
 	}

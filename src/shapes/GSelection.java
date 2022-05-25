@@ -2,17 +2,17 @@ package shapes;
 
 import java.util.Vector;
 
-public class GGroup extends GRectangle {
+public class GSelection extends GRectangle {
 	private static final long serialVersionUID = 1L;
 	private Vector<GShape> containedShapes;
 	
-	public GGroup() {
+	public GSelection() {
 		this.containedShapes = new Vector<GShape>();
 	}
 
 	@Override
 	public GShape clone() {
-		return new GGroup();
+		return new GSelection();
 	}
 	
 	public void contains(Vector<GShape> shapes) {

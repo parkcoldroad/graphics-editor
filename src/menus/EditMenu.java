@@ -12,7 +12,6 @@ import global.Constants.EEditMenuItem;
 
 @SuppressWarnings("serial")
 public class EditMenu extends JMenu {
-	@SuppressWarnings("unused")
 	private DrawingPanel drawingPanel;
 
 	public EditMenu(String s) {
@@ -25,6 +24,7 @@ public class EditMenu extends JMenu {
 			jmenu.setBackground(Color.WHITE);
 			jmenu.setActionCommand(eEditItem.name()); // name() = toString()
 			jmenu.addActionListener(actionListener);
+			jmenu.setAccelerator(eEditItem.getKeyStroke());
 			this.add(jmenu);
 		}
 
@@ -54,8 +54,8 @@ public class EditMenu extends JMenu {
 		this.drawingPanel.paste();
 	}
 
-	public void group() {
-		this.drawingPanel.group();
+	public void delete() {
+		this.drawingPanel.delete();
 	}
 
 	private class EditMenuHandler implements ActionListener {
@@ -64,21 +64,22 @@ public class EditMenu extends JMenu {
 			EEditMenuItem eEditMenuItem = EEditMenuItem.valueOf(e.getActionCommand());
 			switch (eEditMenuItem) {
 			case eUndo:
-//				undo();
+				undo();
 				break;
 			case eRedo:
-//				redo();
+				redo();
 				break;
 			case eCut:
-//				cut();
+				cut();
 				break;
 			case eCopy:
-//				copy();
+				copy();
 				break;
 			case ePaste:
-//				paste();
+				paste();
 				break;
 			case eDelete:
+				delete();
 				break;
 			default:
 				break;

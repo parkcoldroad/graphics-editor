@@ -34,7 +34,7 @@ public class FileMenu extends JMenu {
 
 	private JFileChooser fileChooser;
 	private String file;
-	private String filename = "제목 없음";
+	private String filename = "No Title";
 	private File imagefile;
 	private File directory;
 	private File imagedirectory;
@@ -85,7 +85,7 @@ public class FileMenu extends JMenu {
 			this.drawingPanel.initiatePanel();
 			this.file = null;
 			this.openimage = null;
-			this.filename = "제목 없음";
+			this.filename = "No Title";
 			this.mainframe.setTitle(filename + " - GraphicsEditor");
 
 		}

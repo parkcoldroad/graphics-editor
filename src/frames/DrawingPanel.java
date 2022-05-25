@@ -24,7 +24,7 @@ import javax.swing.JPanel;
 import global.CursorManager;
 import shapes.GAnchor;
 import shapes.GAnchor.EAnchors;
-import shapes.GGroup;
+import shapes.GSelection;
 import shapes.GShape;
 import shapes.GShape.EDrawingStyle;
 import shapes.GShape.EOnState;
@@ -48,11 +48,14 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 	private Image openimage;
 	private Image pixelimage;
 	private int[] imagePixel;
+	private int index;
 
 	private Vector<GShape> shapes;
+//	private Vector<GShape> tempshapes;
 
 	private GShape selectedShape;
 	private GShape shapeTool;
+	private Clipboard clip;
 	private GTransformer transformer;
 	private GAnchor gAnchor;
 
@@ -83,8 +86,11 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		this.eCurrentState = ECurrentState.eSelecting;
 
 		// components
-		shapes = new Vector<GShape>();
+		this.shapes = new Vector<GShape>();
+//		this.tempshapes = new Vector<GShape>();
+		this.clip = new Clipboard();
 		this.transformer = null;
+		this.index = 0;
 
 		MouseHandler mouseHandler = new MouseHandler();
 		// button
@@ -98,6 +104,8 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 
 	public void initiatePanel() {
 		this.shapes.clear();
+		this.clip.tempshapes.clear();
+		this.clip.clipshapes.clear();
 		this.isUpdated = false;
 		this.fillColor = null;
 		this.lineColor = Color.BLACK;
@@ -222,6 +230,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 	}
 
 	// methods
+
 	private void defineActionState(int x, int y) {
 		EOnState eOnState = onShape(x, y);
 		if (eOnState == null) {
@@ -327,27 +336,70 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 	}
 
 	public void undo() {
+		if (this.clip.tempshapes.size() != 0) {
+			index = clip.getTempShape().size() - 1;
+			this.shapes.add(clip.getTempShape().get(index));
+			clip.tempshapes.remove(index);
+			System.out.println(clip.tempshapes);
+			System.out.println(index);
+		}
 
+//		if (when new shapes draw ) {
+//			clip.initTempShape();
+//		}
+		this.repaint();
 	}
 
 	public void redo() {
-
-	}
-
-	public void copy() {
-
+		if (this.shapes.size() != 0) {
+			this.clip.setTempShape(shapes.lastElement());
+			this.shapes.remove(this.shapes.lastElement());
+			this.selectedShape = null;
+			System.out.println(shapes + "shapes 목록");
+			System.out.println(clip.tempshapes + "tempshapes 목록");
+		}
+		this.repaint();
 	}
 
 	public void cut() {
+		Vector<GShape> selectedShapes = new Vector<GShape>();
+		for (int i = this.shapes.size() - 1; i >= 0; i--) {
+			if (this.shapes.get(i).isSelected()) {
+				selectedShapes.add(this.shapes.get(i));
+				this.shapes.remove(i);
+			}
+		}
+		this.clip.setContents(selectedShapes);
+		this.repaint();
+	}
 
+	public void copy() {
+		Vector<GShape> selectedShapes = new Vector<GShape>();
+		for (GShape shape : this.shapes) {
+			if (shape.isSelected()) {
+				selectedShapes.add(shape);
+			}
+		}
+		this.clip.setContents(selectedShapes);
+		this.repaint();
 	}
 
 	public void paste() {
-
+		Vector<GShape> clipshapes = this.clip.getContents();
+		for (GShape shape : clipshapes) shape.verticalPaste();
+		this.shapes.addAll(clipshapes);
+		this.clip.setContents(clipshapes);
+		this.clearSelected();
+		repaint();
 	}
 
-	public void group() {
-
+	public void delete() {
+		for (int i = this.shapes.size() - 1; i >= 0; i--) {
+			if (this.shapes.get(i).isSelected()) {
+				this.shapes.remove(i);
+			}
+		}
+		this.repaint();
 	}
 
 	// Paint Components
@@ -366,15 +418,15 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		if (this.selectedShape != null) {
 			this.selectedShape.draw(graphics2d);
 		}
-
-		if(this.selectedShape instanceof GTextBox) {
-			((GTextBox) selectedShape).draw(graphics2d);
-			repaint();
-		}
 		
+		if (this.selectedShape instanceof GTextBox) {
+			((GTextBox) selectedShape).draw(graphics2d);
+		}
+
 		for (GShape shape : shapes) {
 			shape.draw(graphics2d);
 		}
+		
 		repaint();
 	}
 
@@ -384,7 +436,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 			this.setColorInfo();
 		}
 
-		if (this.selectedShape instanceof GGroup) {
+		if (this.selectedShape instanceof GSelection) {
 			this.selectedShape.setFillColor(Color.LIGHT_GRAY);
 			this.selectedShape.setLineColor(Color.BLACK);
 		}
@@ -405,15 +457,14 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 	private void finishTransforming(int x2, int y2) {
 		this.transformer.finishTransforming((Graphics2D) this.getGraphics(), x2, y2);
 		if (this.transformer instanceof GDrawer) {
-			if (this.selectedShape instanceof GGroup) {
-				((GGroup) this.selectedShape).contains(this.shapes);
+			if (this.selectedShape instanceof GSelection) {
+				((GSelection) this.selectedShape).contains(this.shapes);
 				this.selectedShape = null;
 				this.isUpdated = false;
 				if (this.shapes.size() > 0) {
 					this.isUpdated = true;
 				}
-			}
-			else {
+			} else {
 				this.shapes.add(this.selectedShape);
 				this.isUpdated = true;
 			}
@@ -492,7 +543,8 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 
 		private void mouse2Cliked(MouseEvent e) {
 			if (selectedShape instanceof GTextBox && eCurrentState == ECurrentState.eSelecting) {
-				String text = JOptionPane.showInputDialog("삽입하실 글자를 입력해주세요", "글자");;
+				String text = JOptionPane.showInputDialog("삽입하실 글자를 입력해주세요", "글자");
+				;
 				if (text != null) {
 					((GTextBox) selectedShape).setText(text);
 				}

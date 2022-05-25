@@ -7,7 +7,6 @@ public class GDrawer extends GTransformer{
 	@Override
 	public void initTransforming(int x, int y) {
 		this.getgShape().setInitPoint(x, y);
-		
 	}
 
 	@Override
