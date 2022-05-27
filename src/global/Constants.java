@@ -5,14 +5,15 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-import shapes.GSelection;
 import shapes.GLine;
 import shapes.GOval;
 import shapes.GPencil;
 import shapes.GPolygon;
 import shapes.GRectangle;
+import shapes.GSelection;
 import shapes.GShape;
 import shapes.GTextBox;
+import shapes.GTriangle;
 
 public class Constants {
 
@@ -21,6 +22,7 @@ public class Constants {
 		eRectangle(new GRectangle(), "images/rectangle.png", "images/rectangle-selected.png", "rectangle", 0),
 		eOval(new GOval(), "images/oval.png", "images/oval-selected.png", "oval", 0),
 		eLine(new GLine(), "images/line.png", "images/line-selected.png", "line", 0),
+		eTriangle(new GTriangle(), "images/triangle.png", "images/triangle-selected.png", "triangle", 0),
 		ePolygon(new GPolygon(), "images/polygon.png", "images/polygon-selected.png", "polygon", 0),
 		eTextBox(new GTextBox(), "images/text.png", "images/text-selected.png", "text", 0),
 		ePencil(new GPencil(), "images/pencil.png", "images/pencil-selected.png", "pencil", 0);
