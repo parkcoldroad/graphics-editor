@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import global.CursorManager;
+import menus.PopupMenu;
 import shapes.GAnchor;
 import shapes.GAnchor.EAnchors;
 import shapes.GSelection;
@@ -52,13 +53,14 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 	private int index;
 
 	private Vector<GShape> shapes;
-//	private Vector<GShape> tempshapes;
-
 	private GShape selectedShape;
 	private GShape shapeTool;
 	private Clipboard clip;
 	private GTransformer transformer;
 	private GAnchor gAnchor;
+
+	private boolean front;
+	private Vector<GShape> forFront;
 
 	private EDrawingState eDrawingState;
 	private ECurrentState eCurrentState;
@@ -87,8 +89,8 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		this.eCurrentState = ECurrentState.eSelecting;
 
 		// components
+		this.forFront = new Vector<GShape>();
 		this.shapes = new Vector<GShape>();
-//		this.tempshapes = new Vector<GShape>();
 		this.clip = new Clipboard();
 		this.transformer = null;
 		this.index = 0;
@@ -107,6 +109,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		this.shapes.clear();
 		this.clip.tempshapes.clear();
 		this.clip.clipshapes.clear();
+		this.forFront.clear();
 		this.isUpdated = false;
 		this.fillColor = null;
 		this.lineColor = Color.BLACK;
@@ -230,8 +233,28 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		this.selectedShape.setLineColor(this.lineColor);
 	}
 
+	public void setShapeFrontBack(boolean front) {
+		this.front = front;
+		this.forFront.clear();
+		
+		if(this.front) {
+			this.shapes.remove(this.selectedShape);
+			this.forFront.addAll(this.shapes);
+			this.forFront.add(this.selectedShape);
+			this.shapes.clear();
+			this.shapes.addAll(this.forFront);
+		}
+		else {
+			this.forFront.add(this.selectedShape);
+			this.shapes.remove(this.selectedShape);
+			this.forFront.addAll(this.shapes);
+			this.shapes.clear();
+			this.shapes.addAll(this.forFront);
+		}
+		this.repaint();
+	}
+	
 	// methods
-
 	private void defineActionState(int x, int y) {
 		EOnState eOnState = onShape(x, y);
 		if (eOnState == null) {
@@ -283,13 +306,14 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 	private EAnchors confirmAnchorSelected(int x, int y) {
 		if (selectedShape != null) {
 			gAnchor = selectedShape.getGAnchor();
-			eAnchor = gAnchor.getSelectedAnchor(x,y);
+			eAnchor = gAnchor.getSelectedAnchor(x, y);
 			return eAnchor;
 		} else {
 			eAnchor = null;
 			return eAnchor;
 		}
 	}
+
 	private Cursor getResizeCursor(EAnchors eAnchor) {
 		Cursor resizeCursor = null;
 		switch (eAnchor) {
@@ -300,31 +324,31 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 			resizeCursor = CursorManager.NN_CURSOR;
 			break;
 		case NE:
-			resizeCursor  = CursorManager.NE_CURSOR;
+			resizeCursor = CursorManager.NE_CURSOR;
 			break;
 		case EE:
-			resizeCursor  = CursorManager.EE_CURSOR;
+			resizeCursor = CursorManager.EE_CURSOR;
 			break;
 		case SE:
-			resizeCursor  = CursorManager.SE_CURSOR;
+			resizeCursor = CursorManager.SE_CURSOR;
 			break;
 		case SS:
-			resizeCursor  = CursorManager.SS_CURSOR;
+			resizeCursor = CursorManager.SS_CURSOR;
 			break;
 		case SW:
-			resizeCursor  = CursorManager.SW_CURSOR;
+			resizeCursor = CursorManager.SW_CURSOR;
 			break;
 		case WW:
-			resizeCursor  = CursorManager.WW_CURSOR;
+			resizeCursor = CursorManager.WW_CURSOR;
 			break;
 		case RR:
-			resizeCursor  = CursorManager.RR_CURSOR;
+			resizeCursor = CursorManager.RR_CURSOR;
 			break;
 		default:
 			this.setCursor(CursorManager.DEFAULT_CURSOR);
 			break;
 		}
-		
+
 		return resizeCursor;
 	}
 
@@ -333,10 +357,9 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 			this.setCursor(CursorManager.CROSSHAIR_CURSOR);
 		} else {
 			this.eAnchor = confirmAnchorSelected(x, y);
-			this.setCursor(onShape(x, y) == EOnState.eOnShape ? 
-					CursorManager.MOVE_CURSOR : 
-						(this.eAnchor != null && selectedShape.isSelected()) ?
-								getResizeCursor(eAnchor) :CursorManager.DEFAULT_CURSOR);
+			this.setCursor(onShape(x, y) == EOnState.eOnShape ? CursorManager.MOVE_CURSOR
+					: (this.eAnchor != null && selectedShape.isSelected()) ? getResizeCursor(eAnchor)
+							: CursorManager.DEFAULT_CURSOR);
 		}
 
 	}
@@ -356,10 +379,10 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		if (this.shapes.size() > 0) {
 			this.clip.setTempShape(shapes.lastElement());
 			this.shapes.remove(this.shapes.lastElement());
-			
-			if(this.shapes.isEmpty() != true)
-			this.shapes.lastElement().setSelected(true);
-			
+
+			if (this.shapes.isEmpty() != true)
+				this.shapes.lastElement().setSelected(true);
+
 			this.selectedShape = null;
 		}
 		this.repaint();
@@ -374,6 +397,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 			}
 		}
 		this.clip.setContents(selectedShapes);
+		this.selectedShape = null;
 		this.repaint();
 	}
 
@@ -405,6 +429,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		for (int i = this.shapes.size() - 1; i >= 0; i--) {
 			if (this.shapes.get(i).isSelected()) {
 				this.shapes.remove(i);
+				this.selectedShape = null;
 			}
 		}
 		this.repaint();
@@ -533,7 +558,8 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 					mouse2Cliked(e);
 				}
 			} else if (e.getButton() == MouseEvent.BUTTON3) {// right click
-
+				PopupMenu popup = new PopupMenu(DrawingPanel.this);
+				popup.show(DrawingPanel.this, e.getX(), e.getY());
 			}
 		}
 
@@ -608,4 +634,5 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 
 		return (NO_SUCH_PAGE);
 	}
+
 }

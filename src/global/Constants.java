@@ -149,7 +149,8 @@ public class Constants {
 	}
 
 	public enum EColorMenuItem {
-		eLineColor("linecolor"), eFillColor("fillcolor");
+		eLineColor("linecolor"), 
+		eFillColor("fillcolor");
 
 		private String text;
 
@@ -162,5 +163,27 @@ public class Constants {
 		}
 
 	}
+	
+	public enum EPopupMenu{
+		eCopy("Copy","copy"),
+		eCut("Cut","cut"),
+		ePaste("Paste","paste"),
+		eFront("setFront", "shapeGoFront"),
+		eBack("setBack","shapeGoBack");
+		
+		private String title;	
+		private String actionCommand;
+		private EPopupMenu(String title,String actionCommand) {
+			this.title = title;
+			this.actionCommand = actionCommand;
+		}		
+		public String getTitle() {
+			return this.title;
+		}
+		public String getActionCommand() {
+			return this.actionCommand;
+		}
+	}
+	
 
 }
