@@ -20,7 +20,7 @@ public abstract class GTransformer {
 		this.groupList = new Vector<GShape>();
 	}
 	
-	public GShape getgShape() { return gShape; }
+//	public GShape getgShape() { return gShape; }
 	public void setgShape(GShape gShape) { this.gShape = gShape; }
 	
 	public void setOldPoint(int x, int y){

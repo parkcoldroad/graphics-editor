@@ -8,11 +8,10 @@ import global.Constants.ECursor;
 
 public class CursorManager {
 	public static final Toolkit tk = Toolkit.getDefaultToolkit();
-	private static Point point = new Point(0, 0);
 	public static final String rotatecursoranme = ECursor.eCursorImage.getRotateImage();
 	public static final String defaultcursorname = ECursor.eCursorImage.getCursorImage();
 	
-	public static final Cursor DEFAULT_CURSOR = tk.createCustomCursor(tk.getImage(defaultcursorname), point, "");
+	public static final Cursor DEFAULT_CURSOR = tk.createCustomCursor(tk.getImage(defaultcursorname), new Point(0, 0), "");
 	public static final Cursor CROSSHAIR_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
 	public static final Cursor MOVE_CURSOR = new Cursor(Cursor.MOVE_CURSOR);
 	public static final Cursor NW_CURSOR = new Cursor(Cursor.NW_RESIZE_CURSOR);
@@ -23,5 +22,5 @@ public class CursorManager {
 	public static final Cursor SS_CURSOR = new Cursor(Cursor.S_RESIZE_CURSOR);
 	public static final Cursor SW_CURSOR = new Cursor(Cursor.SW_RESIZE_CURSOR);
 	public static final Cursor WW_CURSOR = new Cursor(Cursor.W_RESIZE_CURSOR);
-	public static final Cursor RR_CURSOR = tk.createCustomCursor(tk.getImage(rotatecursoranme), point, "");
+	public static final Cursor RR_CURSOR = tk.createCustomCursor(tk.getImage(rotatecursoranme), new Point(25, 25), "");
 }

@@ -2,6 +2,7 @@ package frames;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -282,12 +283,49 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 	private EAnchors confirmAnchorSelected(int x, int y) {
 		if (selectedShape != null) {
 			gAnchor = selectedShape.getGAnchor();
-			eAnchor = gAnchor.getSelectedAnchor(x, y);
+			eAnchor = gAnchor.getSelectedAnchor(x,y);
 			return eAnchor;
 		} else {
 			eAnchor = null;
 			return eAnchor;
 		}
+	}
+	private Cursor getResizeCursor(EAnchors eAnchor) {
+		Cursor resizeCursor = null;
+		switch (eAnchor) {
+		case NW:
+			resizeCursor = CursorManager.NW_CURSOR;
+			break;
+		case NN:
+			resizeCursor = CursorManager.NN_CURSOR;
+			break;
+		case NE:
+			resizeCursor  = CursorManager.NE_CURSOR;
+			break;
+		case EE:
+			resizeCursor  = CursorManager.EE_CURSOR;
+			break;
+		case SE:
+			resizeCursor  = CursorManager.SE_CURSOR;
+			break;
+		case SS:
+			resizeCursor  = CursorManager.SS_CURSOR;
+			break;
+		case SW:
+			resizeCursor  = CursorManager.SW_CURSOR;
+			break;
+		case WW:
+			resizeCursor  = CursorManager.WW_CURSOR;
+			break;
+		case RR:
+			resizeCursor  = CursorManager.RR_CURSOR;
+			break;
+		default:
+			this.setCursor(CursorManager.DEFAULT_CURSOR);
+			break;
+		}
+		
+		return resizeCursor;
 	}
 
 	public void changeCursor(int x, int y) {
@@ -295,68 +333,34 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 			this.setCursor(CursorManager.CROSSHAIR_CURSOR);
 		} else {
 			this.eAnchor = confirmAnchorSelected(x, y);
-			this.setCursor(CursorManager.DEFAULT_CURSOR);
-			if (this.eAnchor != null && selectedShape.isSelected()) {
-				switch (eAnchor) {
-				case NW:
-					this.setCursor(CursorManager.NW_CURSOR);
-					break;
-				case NN:
-					this.setCursor(CursorManager.NN_CURSOR);
-					break;
-				case NE:
-					this.setCursor(CursorManager.NE_CURSOR);
-					break;
-				case EE:
-					this.setCursor(CursorManager.EE_CURSOR);
-					break;
-				case SE:
-					this.setCursor(CursorManager.SE_CURSOR);
-					break;
-				case SS:
-					this.setCursor(CursorManager.SS_CURSOR);
-					break;
-				case SW:
-					this.setCursor(CursorManager.SW_CURSOR);
-					break;
-				case WW:
-					this.setCursor(CursorManager.WW_CURSOR);
-					break;
-				case RR:
-					this.setCursor(CursorManager.RR_CURSOR);
-					break;
-				default:
-					this.setCursor(CursorManager.DEFAULT_CURSOR);
-					break;
-				}
-			}
-
+			this.setCursor(onShape(x, y) == EOnState.eOnShape ? 
+					CursorManager.MOVE_CURSOR : 
+						(this.eAnchor != null && selectedShape.isSelected()) ?
+								getResizeCursor(eAnchor) :CursorManager.DEFAULT_CURSOR);
 		}
 
 	}
 
 	public void undo() {
-		if (this.clip.tempshapes.size() != 0) {
+		if (this.clip.tempshapes.size() > 0) {
+			this.clearSelected();
 			index = clip.getTempShape().size() - 1;
 			this.shapes.add(clip.getTempShape().get(index));
+			this.shapes.lastElement().setSelected(true);
 			clip.tempshapes.remove(index);
-			System.out.println(clip.tempshapes);
-			System.out.println(index);
 		}
-
-//		if (when new shapes draw ) {
-//			clip.initTempShape();
-//		}
 		this.repaint();
 	}
 
 	public void redo() {
-		if (this.shapes.size() != 0) {
+		if (this.shapes.size() > 0) {
 			this.clip.setTempShape(shapes.lastElement());
 			this.shapes.remove(this.shapes.lastElement());
+			
+			if(this.shapes.isEmpty() != true)
+			this.shapes.lastElement().setSelected(true);
+			
 			this.selectedShape = null;
-			System.out.println(shapes + "shapes 목록");
-			System.out.println(clip.tempshapes + "tempshapes 목록");
 		}
 		this.repaint();
 	}
@@ -386,10 +390,14 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 
 	public void paste() {
 		Vector<GShape> clipshapes = this.clip.getContents();
-		for (GShape shape : clipshapes) shape.verticalPaste();
+		for (GShape shape : clipshapes) {
+			this.clearSelected();
+			shape.verticalPaste();
+			shape.setSelected(true);
+		}
 		this.shapes.addAll(clipshapes);
 		this.clip.setContents(clipshapes);
-		this.clearSelected();
+
 		repaint();
 	}
 
@@ -418,7 +426,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		if (this.selectedShape != null) {
 			this.selectedShape.draw(graphics2d);
 		}
-		
+
 		if (this.selectedShape instanceof GTextBox) {
 			((GTextBox) selectedShape).draw(graphics2d);
 		}
@@ -426,7 +434,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		for (GShape shape : shapes) {
 			shape.draw(graphics2d);
 		}
-		
+
 		repaint();
 	}
 
@@ -466,6 +474,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 				}
 			} else {
 				this.shapes.add(this.selectedShape);
+				this.clip.tempshapes.clear();
 				this.isUpdated = true;
 			}
 		}
