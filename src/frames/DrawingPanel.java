@@ -191,10 +191,11 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		this.shapeTool = shapeTool;
 	}
 
-	public void setStroke(int index) {
+	public void setStroke(int index, float[] dash) {
 		for (GShape shape : this.shapes) {
 			if (shape.isSelected()) {
 				shape.setStroke(index);
+				shape.setStrokeDash(dash);
 			}
 		}
 		this.repaint();

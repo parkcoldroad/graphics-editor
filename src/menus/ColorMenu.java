@@ -15,8 +15,8 @@ import global.Constants.EColorMenuItem;
 public class ColorMenu extends JMenu {
 	private DrawingPanel drawingPanel;
 
-	public ColorMenu(String s) {
-		super(s);
+	public ColorMenu() {
+		super("color");
 	
 		actionListener = new ColorHandler();
 

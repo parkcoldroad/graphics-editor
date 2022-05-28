@@ -14,8 +14,8 @@ import global.Constants.EEditMenuItem;
 public class EditMenu extends JMenu {
 	private DrawingPanel drawingPanel;
 
-	public EditMenu(String s) {
-		super(s);
+	public EditMenu() {
+		super("edit");
 
 		actionListener = new EditMenuHandler();
 

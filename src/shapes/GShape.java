@@ -27,6 +27,7 @@ abstract public class GShape implements Serializable {
 	private Color lineColor;
 	private Color fillColor;
 	private int stroke;
+	private float[] dash;
 
 	protected Shape shape;
 	protected GAnchor gAnchors;
@@ -49,6 +50,7 @@ abstract public class GShape implements Serializable {
 		this.fillColor = null;
 		this.selected = false;
 		this.stroke = 0;
+		this.dash = null;
 		this.gAnchors = new GAnchor();
 	}
 
@@ -105,6 +107,10 @@ abstract public class GShape implements Serializable {
 	public void setStroke(int index) {
 		this.stroke = index;
 	}
+	
+	public void setStrokeDash(float[] dash) {
+		this.dash = dash;
+	}
 
 	public Shape getShape() {
 		return this.shape;
@@ -135,6 +141,11 @@ abstract public class GShape implements Serializable {
 			graphics2d.setStroke(new BasicStroke(this.stroke));
 		}
 
+		if(this.dash != null) {
+			graphics2d.setStroke(new BasicStroke(this.stroke, BasicStroke.CAP_BUTT,
+					BasicStroke.JOIN_MITER, 1.0f, this.dash, 0.0f));
+		}
+		
 		if (this.fillColor != null) {
 			graphics2d.setColor(fillColor);
 			graphics2d.fill(this.shape);

@@ -166,6 +166,20 @@ public class Constants {
 
 	}
 	
+	public enum EStrokeMenuItem {
+		eStroke("stroke");
+		private String text;
+
+		private EStrokeMenuItem(String text) {
+			this.text = text;
+		}
+
+		public String getText() {
+			return this.text;
+		}
+
+	}
+	
 	public enum EPopupMenu{
 		eCopy("Copy","copy"),
 		eCut("Cut","cut"),

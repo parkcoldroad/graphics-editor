@@ -17,7 +17,7 @@ public class MainFrame extends JFrame {
 	@SuppressWarnings("static-access")
 	public MainFrame() {
 		//attribute
-		this.setSize(680, 600);
+		this.setSize(590, 600);
 		this.setTitle("No Title - GraphicsEditor");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		ImageIcon img = new ImageIcon("images/canvas.png");
