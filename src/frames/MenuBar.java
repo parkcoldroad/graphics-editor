@@ -41,8 +41,4 @@ public class MenuBar extends JMenuBar {
 		this.fileMenu.quit();
 	}
 	
-	public String getFileName() {
-		return this.fileMenu.getFileName();
-	}
-
 }

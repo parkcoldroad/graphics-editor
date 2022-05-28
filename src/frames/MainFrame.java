@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -21,7 +22,7 @@ public class MainFrame extends JFrame {
 	private ToolBar toolBar;
 	private DrawingPanel drawingPanel;
 	private ExitHandler exitHandler;
-	private JTabbedPane tapPane;
+	private JTabbedPane tabPane;
 	private TabbedPaneHandler tabbedPaneHandler;
 	private Vector<JPanel> drawingPanelList;
 	private int count = 1;
@@ -54,10 +55,10 @@ public class MainFrame extends JFrame {
 		this.menuBar = new MenuBar();
 		this.setJMenuBar(this.menuBar);
 
-		this.tapPane = new JTabbedPane();
+		this.tabPane = new JTabbedPane();
 		this.tabbedPaneHandler = new TabbedPaneHandler();
-		tapPane.addTab("File", this.drawingPanel);
-		this.add(tapPane);
+		tabPane.addTab("File", this.drawingPanel);
+		this.add(tabPane);
 
 		JButton addPanelBtn = new JButton("add DrawingPanel");
 		addPanelBtn.addActionListener(tabbedPaneHandler);
@@ -68,6 +69,20 @@ public class MainFrame extends JFrame {
 		this.menuBar.associate(drawingPanel);
 	}
 
+	public static void setTabTitle(JPanel tab, String title)
+	{
+	    JTabbedPane tabbedPane = (JTabbedPane) SwingUtilities.getAncestorOfClass(JTabbedPane.class, tab);
+
+	    for (int tabIndex = 0; tabIndex < tabbedPane.getTabCount(); tabIndex++)
+	    {
+	        if (SwingUtilities.isDescendingFrom(tab, tabbedPane.getComponentAt(tabIndex)))
+	        {
+	            tabbedPane.setTitleAt(tabIndex, title);
+	            break;
+	        }
+	    }
+	}
+	
 	private class ExitHandler extends WindowAdapter {
 		public void windowClosing(WindowEvent e) {
 			menuBar.checkWindowSave();
@@ -77,22 +92,23 @@ public class MainFrame extends JFrame {
 	private class TabbedPaneHandler implements ActionListener, ChangeListener {
 
 		private TabbedPaneHandler() {
-			tapPane.addChangeListener(this);
+			tabPane.addChangeListener(this);
 		}
 
 		public void actionPerformed(ActionEvent e) {
 			DrawingPanel drawingPanel = new DrawingPanel();
 			drawingPanelList.add(drawingPanel);
-			tapPane.addTab("File" + count, drawingPanel);
+			tabPane.addTab("File" + count, drawingPanel);
 			count++;
 		}
 
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			tapPane = (JTabbedPane) e.getSource();
-			drawingPanel = (DrawingPanel) drawingPanelList.get(tapPane.getSelectedIndex());
+			tabPane = (JTabbedPane) e.getSource();
+			drawingPanel = (DrawingPanel) drawingPanelList.get(tabPane.getSelectedIndex());
 			toolBar.associate(drawingPanel);
 			menuBar.associate(drawingPanel);
+			
 		}
 	}
 }

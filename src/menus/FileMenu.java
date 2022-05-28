@@ -23,6 +23,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import frames.DrawingPanel;
@@ -74,10 +76,6 @@ public class FileMenu extends JMenu {
 	public String getCheckFile() {
 		return file;
 	}
-
-	public String getFileName() {
-		return filename;
-	}
 	
 	public void associate(DrawingPanel drawingPanel) {
 		this.drawingPanel = drawingPanel;
@@ -88,8 +86,8 @@ public class FileMenu extends JMenu {
 			this.drawingPanel.initiatePanel();
 			this.file = null;
 			this.openimage = null;
-			this.filename = "No Title";
-//			this.mainframe.setTitle(filename + " - GraphicsEditor");
+			this.filename = "File";
+			MainFrame.setTabTitle(drawingPanel,filename);
 		}
 	}
 
@@ -98,10 +96,10 @@ public class FileMenu extends JMenu {
 		if (this.drawingPanel.isUpdated()) {
 			// save
 				int reply = JOptionPane.showConfirmDialog(this.drawingPanel,
-						"<html>\"" + filename + "\"" + "에 저장되지 않은 변경 내용이 있습니다. " + " <br> 작업을 저장하시겠습니까? </html>",
+						"<html>\"  현재 선택된 파일에 저장되지 않은 변경 내용이 있습니다. " + " <br> 작업을 저장하시겠습니까? </html>",
 						"SaveFile", JOptionPane.YES_NO_CANCEL_OPTION);
 				if (reply == JOptionPane.OK_OPTION) {
-					this.save();
+					this.saveAs();
 					isChecked = true;
 				} else if (reply == JOptionPane.NO_OPTION) {
 					this.drawingPanel.setUpdated(false);
@@ -135,13 +133,12 @@ public class FileMenu extends JMenu {
 
 			if (returnvalue == JFileChooser.APPROVE_OPTION) {
 				file = fileChooser.getSelectedFile().toString();
-				file = fileChooser.getSelectedFile().toString();
 				this.drawingPanel.initiatePanel();
 				this.setCheckFile(file);
 
 				filename = fileChooser.getSelectedFile().getName();
-//				this.mainframe.setTitle(filename + " - GraphicsEditor");
-
+				MainFrame.setTabTitle(drawingPanel,filename);
+				
 				load();
 			}
 		}
@@ -158,7 +155,6 @@ public class FileMenu extends JMenu {
 				this.drawingPanel.openImage(openimage);
 				imageCanvas.setImage(openimage);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -220,8 +216,8 @@ public class FileMenu extends JMenu {
 			this.file = fileChooser.getSelectedFile().toString();
 
 			filename = fileChooser.getSelectedFile().getName();
-//			this.mainframe.setTitle(filename + " - GraphicsEditor");
-
+			MainFrame.setTabTitle(drawingPanel,filename);
+			
 			if (!this.file.endsWith(".gil")) {
 				file += ".gil";
 			}
