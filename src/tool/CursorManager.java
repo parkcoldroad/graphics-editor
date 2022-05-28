@@ -1,4 +1,4 @@
-package global;
+package tool;
 
 import java.awt.Cursor;
 import java.awt.Point;
@@ -22,5 +22,5 @@ public class CursorManager {
 	public static final Cursor SS_CURSOR = new Cursor(Cursor.S_RESIZE_CURSOR);
 	public static final Cursor SW_CURSOR = new Cursor(Cursor.SW_RESIZE_CURSOR);
 	public static final Cursor WW_CURSOR = new Cursor(Cursor.W_RESIZE_CURSOR);
-	public static final Cursor RR_CURSOR = tk.createCustomCursor(tk.getImage(rotatecursoranme), new Point(25, 25), "");
+	public static final Cursor RR_CURSOR = tk.createCustomCursor(tk.getImage(rotatecursoranme), new Point(15, 15), "");
 }

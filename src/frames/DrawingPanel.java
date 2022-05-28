@@ -22,7 +22,6 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import global.CursorManager;
 import menus.PopupMenu;
 import shapes.GAnchor;
 import shapes.GAnchor.EAnchors;
@@ -30,6 +29,8 @@ import shapes.GSelection;
 import shapes.GShape;
 import shapes.GShape.EDrawingStyle;
 import shapes.GShape.EOnState;
+import tool.Clipboard;
+import tool.CursorManager;
 import shapes.GTextBox;
 import transformer.GDrawer;
 import transformer.GMover;
@@ -102,7 +103,6 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		this.addMouseMotionListener(mouseHandler);
 		// wheel
 		this.addMouseWheelListener(mouseHandler);
-
 	}
 
 	public void initiatePanel() {
@@ -125,6 +125,8 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 
 	public void associatePreviewPanel(PreviewPanel previewPanel) {
 		this.previewPanel = previewPanel;
+		this.previewPanel.setFillColor(fillColor);
+		this.previewPanel.setLineColor(lineColor);
 	}
 
 	public boolean isUpdated() {
@@ -237,15 +239,14 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 	public void setShapeFrontBack(boolean front) {
 		this.front = front;
 		this.forFront.clear();
-		
-		if(this.front) {
+
+		if (this.front) {
 			this.shapes.remove(this.selectedShape);
 			this.forFront.addAll(this.shapes);
 			this.forFront.add(this.selectedShape);
 			this.shapes.clear();
 			this.shapes.addAll(this.forFront);
-		}
-		else {
+		} else {
 			this.forFront.add(this.selectedShape);
 			this.shapes.remove(this.selectedShape);
 			this.forFront.addAll(this.shapes);
@@ -254,7 +255,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		}
 		this.repaint();
 	}
-	
+
 	// methods
 	private void defineActionState(int x, int y) {
 		EOnState eOnState = onShape(x, y);

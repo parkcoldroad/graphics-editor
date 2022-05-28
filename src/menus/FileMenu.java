@@ -28,6 +28,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import frames.DrawingPanel;
 import frames.MainFrame;
 import global.Constants.EFileMenuItem;
+import tool.ImageCanvas;
 
 @SuppressWarnings("serial")
 public class FileMenu extends JMenu {
@@ -41,7 +42,6 @@ public class FileMenu extends JMenu {
 	protected Image openimage;
 
 	private DrawingPanel drawingPanel;
-	private MainFrame mainframe;
 	private ImageCanvas imageCanvas;
 
 	private boolean isModified;
@@ -75,9 +75,12 @@ public class FileMenu extends JMenu {
 		return file;
 	}
 
-	public void associate(DrawingPanel drawingPanel, MainFrame mainFrame) {
+	public String getFileName() {
+		return filename;
+	}
+	
+	public void associate(DrawingPanel drawingPanel) {
 		this.drawingPanel = drawingPanel;
-		this.mainframe = mainFrame;
 	}
 
 	private void newFile() {
@@ -86,8 +89,7 @@ public class FileMenu extends JMenu {
 			this.file = null;
 			this.openimage = null;
 			this.filename = "No Title";
-			this.mainframe.setTitle(filename + " - GraphicsEditor");
-
+//			this.mainframe.setTitle(filename + " - GraphicsEditor");
 		}
 	}
 
@@ -138,7 +140,7 @@ public class FileMenu extends JMenu {
 				this.setCheckFile(file);
 
 				filename = fileChooser.getSelectedFile().getName();
-				this.mainframe.setTitle(filename + " - GraphicsEditor");
+//				this.mainframe.setTitle(filename + " - GraphicsEditor");
 
 				load();
 			}
@@ -218,7 +220,7 @@ public class FileMenu extends JMenu {
 			this.file = fileChooser.getSelectedFile().toString();
 
 			filename = fileChooser.getSelectedFile().getName();
-			this.mainframe.setTitle(filename + " - GraphicsEditor");
+//			this.mainframe.setTitle(filename + " - GraphicsEditor");
 
 			if (!this.file.endsWith(".gil")) {
 				file += ".gil";

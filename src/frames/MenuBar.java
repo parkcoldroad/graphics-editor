@@ -29,9 +29,9 @@ public class MenuBar extends JMenuBar {
 		this.add(this.strokeMenu);
 	}
 
-	public void associate(DrawingPanel drawingPanel, MainFrame mainFrame) {
+	public void associate(DrawingPanel drawingPanel) {
 		this.drawingPanel = drawingPanel;
-		this.fileMenu.associate(this.drawingPanel,mainFrame);
+		this.fileMenu.associate(this.drawingPanel);
 		this.editMenu.associate(this.drawingPanel);
 		this.colorMenu.associate(this.drawingPanel);
 		this.strokeMenu.associate(this.drawingPanel);
@@ -39,6 +39,10 @@ public class MenuBar extends JMenuBar {
 
 	public void checkWindowSave() {
 		this.fileMenu.quit();
+	}
+	
+	public String getFileName() {
+		return this.fileMenu.getFileName();
 	}
 
 }

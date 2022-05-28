@@ -16,10 +16,9 @@ public class StrokeFrame extends JFrame {
 	private DrawingPanel drawingPanel;
 
 	public StrokeFrame() {
-		this.setSize(150, 130);
+		this.setSize(200, 130);
 		this.strokeChooseHandler = new StrokeHandler();
 		this.setLayout(new FlowLayout());
-
 		JLabel strokesizelabel = new JLabel("StrokeSize");
 		this.add(strokesizelabel);
 

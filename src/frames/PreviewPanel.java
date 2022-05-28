@@ -11,11 +11,12 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class PreviewPanel extends JPanel {
 
-	private Color lineColor = Color.BLACK;
-	private Color fillColor = Color.WHITE;
+	private Color lineColor;
+	private Color fillColor;
 
 	public PreviewPanel() {
-
+		lineColor = Color.BLACK;
+		fillColor = Color.WHITE;
 		this.setBackground(Color.WHITE);
 		setLayout(new FlowLayout(FlowLayout.CENTER, 1, 1));
 
@@ -30,18 +31,19 @@ public class PreviewPanel extends JPanel {
 	public void setFillColor(Color fillcolor) {
 		this.fillColor = fillcolor;
 	}
-	
+
 	public void paint(Graphics g) {
 		Graphics2D graphics2d = (Graphics2D) g;
 		super.paint(graphics2d);
-		
-		graphics2d.setColor(fillColor);
-		graphics2d.fillRect(10, 25, 30, 30);
 
+		if (this.fillColor != null) {
+			graphics2d.setColor(fillColor);
+			graphics2d.fillRect(10, 25, 30, 30);
+		}
 		graphics2d.setColor(lineColor);
 
 		graphics2d.drawRect(10, 25, 30, 30);
-		
+
 		repaint();
 	}
 

@@ -1,4 +1,4 @@
-package menus;
+package tool;
 
 import java.awt.Image;
 import java.awt.image.ImageObserver;

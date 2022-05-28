@@ -1,4 +1,4 @@
-package frames;
+package tool;
 
 import java.util.Vector;
 import shapes.GShape;
