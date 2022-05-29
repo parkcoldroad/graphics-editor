@@ -47,6 +47,8 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 
 	private Color lineColor;
 	private Color fillColor = null;
+	private Color backgroundColor = null;
+	private Color objectbackgroundColor = null;
 
 	private Image openimage;
 	private Image pixelimage;
@@ -81,6 +83,8 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		// attributes
 		this.lineColor = Color.BLACK;
 		this.fillColor = null;
+		this.backgroundColor = null;
+		this.objectbackgroundColor = null;
 		this.isUpdated = false;
 
 		this.setLayout(borderlayout);
@@ -112,12 +116,16 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		this.forFront.clear();
 		this.isUpdated = false;
 		this.fillColor = null;
+		this.objectbackgroundColor = null;
 		this.lineColor = Color.BLACK;
+		this.backgroundColor = Color.WHITE;
 		this.selectedShape = null;
 		this.openimage = null;
 		this.pixelimage = null;
 		previewPanel.setFillColor(Color.WHITE);
 		previewPanel.setLineColor(Color.BLACK);
+
+		this.setBackgroundColor(backgroundColor);
 		this.repaint();
 	}
 
@@ -164,7 +172,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		if (imagePixel != null) {
 			Toolkit tk = Toolkit.getDefaultToolkit();
 			ColorModel cm = ColorModel.getRGBdefault();
-			pixelimage = tk.createImage(new MemoryImageSource(50, 50, cm, imagePixel, 0, 50));
+			pixelimage = tk.createImage(new MemoryImageSource(100, 100, cm, imagePixel, 0, 100));
 		}
 		isUpdated = false;
 	}
@@ -231,6 +239,16 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 		previewPanel.setFillColor(fillcolor);
 	}
 
+	public void setBackgroundColor(Color backgroundcolor) {
+		this.backgroundColor = backgroundcolor;
+		this.setBackground(backgroundColor);
+		this.isUpdated = true;
+	}
+
+	public void setObjectBackColor(Object backcolorobject) {
+		this.objectbackgroundColor = (Color) backcolorobject;
+	}
+
 	public void setColorInfo() {
 		this.selectedShape.setFillColor(this.fillColor);
 		this.selectedShape.setLineColor(this.lineColor);
@@ -254,6 +272,88 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 			this.shapes.addAll(this.forFront);
 		}
 		this.repaint();
+	}
+
+	// Paint Components
+	public void paint(Graphics g) {
+		Graphics2D graphics2d = (Graphics2D) g;
+		super.paint(g);
+
+		if (this.openimage != null) {
+			graphics2d.drawImage(openimage, 0, 0, this);
+		}
+
+		if (this.pixelimage != null) {
+			graphics2d.drawImage(pixelimage, 0, 0, this);
+		}
+
+		if (this.selectedShape != null) {
+			this.selectedShape.draw(graphics2d);
+		}
+
+		if (this.selectedShape instanceof GTextBox) {
+			((GTextBox) selectedShape).draw(graphics2d);
+		}
+
+		if (this.objectbackgroundColor != null) {
+			this.setBackground(objectbackgroundColor);
+			this.objectbackgroundColor = null;
+		}
+
+		for (GShape shape : shapes) {
+			shape.draw(graphics2d);
+		}
+
+		repaint();
+	}
+
+	private void initTransforming(int x1, int y1) {
+		if (this.transformer instanceof GDrawer) {
+			this.selectedShape = this.shapeTool.clone();
+			this.setColorInfo();
+		}
+
+		if (this.selectedShape instanceof GSelection) {
+			this.selectedShape.setFillColor(Color.LIGHT_GRAY);
+			this.selectedShape.setLineColor(Color.BLACK);
+		}
+
+		this.transformer.setgShape(this.selectedShape);
+		this.transformer.initTransforming(x1, y1);
+	}
+
+	private void keepTransforming(int x2, int y2) {
+		Graphics2D g2 = (Graphics2D) this.getGraphics();
+		g2.setXORMode(this.getBackground());
+		try {
+			this.transformer.keepTransforming(g2, x2, y2);
+		} catch (NullPointerException e) {
+		}
+	}
+
+	private void finishTransforming(int x2, int y2) {
+		this.transformer.finishTransforming((Graphics2D) this.getGraphics(), x2, y2);
+		if (this.transformer instanceof GDrawer) {
+			if (this.selectedShape instanceof GSelection) {
+				((GSelection) this.selectedShape).contains(this.shapes);
+				this.selectedShape = null;
+				this.isUpdated = false;
+				if (this.shapes.size() > 0) {
+					this.isUpdated = true;
+				}
+			} else {
+				this.shapes.add(this.selectedShape);
+				this.clip.tempshapes.clear();
+				this.isUpdated = true;
+			}
+		}
+		this.repaint();
+	}
+
+	private void continueTransforming(int x2, int y2) {
+		this.transformer.setgShape(this.selectedShape);
+		Graphics2D g2 = (Graphics2D) this.getGraphics();
+		this.transformer.continueTransforming(g2, x2, y2);
 	}
 
 	// methods
@@ -435,83 +535,6 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
 			}
 		}
 		this.repaint();
-	}
-
-	// Paint Components
-	public void paint(Graphics g) {
-		Graphics2D graphics2d = (Graphics2D) g;
-		super.paint(g);
-
-		if (this.openimage != null) {
-			graphics2d.drawImage(openimage, 0, 0, this);
-		}
-
-		if (this.pixelimage != null) {
-			graphics2d.drawImage(pixelimage, 0, 0, this);
-		}
-
-		if (this.selectedShape != null) {
-			this.selectedShape.draw(graphics2d);
-		}
-
-		if (this.selectedShape instanceof GTextBox) {
-			((GTextBox) selectedShape).draw(graphics2d);
-		}
-
-		for (GShape shape : shapes) {
-			shape.draw(graphics2d);
-		}
-
-		repaint();
-	}
-
-	private void initTransforming(int x1, int y1) {
-		if (this.transformer instanceof GDrawer) {
-			this.selectedShape = this.shapeTool.clone();
-			this.setColorInfo();
-		}
-
-		if (this.selectedShape instanceof GSelection) {
-			this.selectedShape.setFillColor(Color.LIGHT_GRAY);
-			this.selectedShape.setLineColor(Color.BLACK);
-		}
-
-		this.transformer.setgShape(this.selectedShape);
-		this.transformer.initTransforming(x1, y1);
-	}
-
-	private void keepTransforming(int x2, int y2) {
-		Graphics2D g2 = (Graphics2D) this.getGraphics();
-		g2.setXORMode(this.getBackground());
-		try {
-			this.transformer.keepTransforming(g2, x2, y2);
-		} catch (NullPointerException e) {
-		}
-	}
-
-	private void finishTransforming(int x2, int y2) {
-		this.transformer.finishTransforming((Graphics2D) this.getGraphics(), x2, y2);
-		if (this.transformer instanceof GDrawer) {
-			if (this.selectedShape instanceof GSelection) {
-				((GSelection) this.selectedShape).contains(this.shapes);
-				this.selectedShape = null;
-				this.isUpdated = false;
-				if (this.shapes.size() > 0) {
-					this.isUpdated = true;
-				}
-			} else {
-				this.shapes.add(this.selectedShape);
-				this.clip.tempshapes.clear();
-				this.isUpdated = true;
-			}
-		}
-		this.repaint();
-	}
-
-	private void continueTransforming(int x2, int y2) {
-		this.transformer.setgShape(this.selectedShape);
-		Graphics2D g2 = (Graphics2D) this.getGraphics();
-		this.transformer.continueTransforming(g2, x2, y2);
 	}
 
 	// EventHandler

@@ -27,11 +27,11 @@ public class ImageCanvas implements Serializable {
 	}
 
 	public void writeObject(ObjectOutputStream s) throws IOException {
-		int[] pixels = image != null ? new int[50 * 50] : null;
+		int[] pixels = image != null ? new int[100 * 100] : null;
 
 		if (image != null) {
 			try {
-				PixelGrabber pg = new PixelGrabber(image, 0, 0, 50,  50, pixels, 0, 50);
+				PixelGrabber pg = new PixelGrabber(image, 0, 0, 100, 100, pixels, 0, 100);
 				pg.grabPixels();
 				if ((pg.getStatus() & ImageObserver.ABORT) != 0) {
 					throw new IOException("failed to load image contents");
@@ -42,7 +42,5 @@ public class ImageCanvas implements Serializable {
 		}
 		s.writeObject(pixels);
 	}
-
-
 
 }

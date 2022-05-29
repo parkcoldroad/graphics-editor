@@ -104,8 +104,8 @@ public class Constants {
 		eNew("new", KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK)),
 		eOpen("open", KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK)),
 		eOpenImage("openImage", KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK)),
-		eSave("save", KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK)),
-		eSaveAs("saveAs", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK)),
+		eSave("save", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK)),
+		eSaveAs("saveAs", KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK)),
 		ePrint("print", KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK)),
 		eExit("exit", KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK));
 
@@ -186,11 +186,13 @@ public class Constants {
 		eCopy("Copy","copy"),
 		eCut("Cut","cut"),
 		ePaste("Paste","paste"),
-		eFront("setFront", "shapeGoFront"),
-		eBack("setBack","shapeGoBack");
+		eFront("setFront","shapeGoFront"),
+		eBack("setBack","shapeGoBack"),
+		eBackgroundColor("setBackgroundColor","setBackgroundColor");
 		
 		private String title;	
 		private String actionCommand;
+		
 		private EPopupMenu(String title,String actionCommand) {
 			this.title = title;
 			this.actionCommand = actionCommand;

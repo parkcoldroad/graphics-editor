@@ -23,8 +23,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import frames.DrawingPanel;
@@ -76,7 +74,7 @@ public class FileMenu extends JMenu {
 	public String getCheckFile() {
 		return file;
 	}
-	
+
 	public void associate(DrawingPanel drawingPanel) {
 		this.drawingPanel = drawingPanel;
 	}
@@ -87,7 +85,7 @@ public class FileMenu extends JMenu {
 			this.file = null;
 			this.openimage = null;
 			this.filename = "File";
-			MainFrame.setTabTitle(drawingPanel,filename);
+			MainFrame.setTabTitle(drawingPanel, filename);
 		}
 	}
 
@@ -95,19 +93,19 @@ public class FileMenu extends JMenu {
 		boolean isChecked = true;
 		if (this.drawingPanel.isUpdated()) {
 			// save
-				int reply = JOptionPane.showConfirmDialog(this.drawingPanel,
-						"<html>\"  현재 선택된 파일에 저장되지 않은 변경 내용이 있습니다. " + " <br> 작업을 저장하시겠습니까? </html>",
-						"SaveFile", JOptionPane.YES_NO_CANCEL_OPTION);
-				if (reply == JOptionPane.OK_OPTION) {
-					this.saveAs();
-					isChecked = true;
-				} else if (reply == JOptionPane.NO_OPTION) {
-					this.drawingPanel.setUpdated(false);
-					isChecked = true;
-				} else if (reply == JOptionPane.CANCEL_OPTION || reply == JOptionPane.CLOSED_OPTION) {
-					isChecked = false;
-				}
-			
+			int reply = JOptionPane.showConfirmDialog(this.drawingPanel,
+					"<html>" + "현재 선택된 파일에 저장되지 않은 변경 내용이 있습니다." + " <br> 작업을 저장하시겠습니까? </html>", "SaveFile",
+					JOptionPane.YES_NO_CANCEL_OPTION);
+			if (reply == JOptionPane.OK_OPTION) {
+				this.saveAs();
+				isChecked = true;
+			} else if (reply == JOptionPane.NO_OPTION) {
+				this.drawingPanel.setUpdated(false);
+				isChecked = true;
+			} else if (reply == JOptionPane.CANCEL_OPTION || reply == JOptionPane.CLOSED_OPTION) {
+				isChecked = false;
+			}
+
 		}
 		return isChecked;
 	}
@@ -137,8 +135,8 @@ public class FileMenu extends JMenu {
 				this.setCheckFile(file);
 
 				filename = fileChooser.getSelectedFile().getName();
-				MainFrame.setTabTitle(drawingPanel,filename);
-				
+				MainFrame.setTabTitle(drawingPanel, filename);
+
 				load();
 			}
 		}
@@ -167,8 +165,10 @@ public class FileMenu extends JMenu {
 			ObjectInputStream objectinputStream = new ObjectInputStream(fileinputStream); // object->bytestream
 			Object object = objectinputStream.readObject();
 			Object imageobject = imageCanvas.readObject(objectinputStream);
+			Object backcolorobject = objectinputStream.readObject();
 			this.drawingPanel.setImagePixel(imageobject);
 			this.drawingPanel.setShapes(object);
+			this.drawingPanel.setObjectBackColor(backcolorobject);
 			objectinputStream.close();
 		} catch (IOException | ClassNotFoundException e) {
 			JOptionPane.showMessageDialog(null, "열 수 없는 파일입니다.");
@@ -176,17 +176,13 @@ public class FileMenu extends JMenu {
 	}
 
 	private void save() {
-		isModified = drawingPanel.isUpdated();
-	
 		checkfile = checkSameFile();
-		if (isModified == true) {
-			if (this.file == null) {
-				saveAs();
-			} else if (this.checkfile == true) {
-				store();
-			} else if (this.checkfile == false) {
-				saveAs();
-			}
+		if (this.file == null) {
+			saveAs();
+		} else if (this.checkfile == true) {
+			store();
+		} else if (this.checkfile == false) {
+			saveAs();
 		}
 	}
 
@@ -196,6 +192,7 @@ public class FileMenu extends JMenu {
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);// object->bytestream
 			objectOutputStream.writeObject(this.drawingPanel.getShapes());
 			imageCanvas.writeObject(objectOutputStream);
+			objectOutputStream.writeObject(this.drawingPanel.getBackground());
 			objectOutputStream.close();
 			this.drawingPanel.setUpdated(false);
 		} catch (FileNotFoundException e) {
@@ -216,8 +213,8 @@ public class FileMenu extends JMenu {
 			this.file = fileChooser.getSelectedFile().toString();
 
 			filename = fileChooser.getSelectedFile().getName();
-			MainFrame.setTabTitle(drawingPanel,filename);
-			
+			MainFrame.setTabTitle(drawingPanel, filename);
+
 			if (!this.file.endsWith(".gil")) {
 				file += ".gil";
 			}
