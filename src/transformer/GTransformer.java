@@ -28,17 +28,13 @@ public abstract class GTransformer {
 		this.oldPoint.y = y;
 	}
 	
-	public Point getAnchorP(){
-		return anchorPoint;
-	}
-	
-	public Vector<GShape> getGroupList() {
-		return groupList;
-	}
-	
-	public void setGroupList(Vector<GShape> groupList) {
-		this.groupList = groupList;
-	}
+//	public Vector<GShape> getGroupList() {
+//		return groupList;
+//	}
+//	
+//	public void setGroupList(Vector<GShape> groupList) {
+//		this.groupList = groupList;
+//	}
 	
 	abstract public void initTransforming(int x, int y);
 	

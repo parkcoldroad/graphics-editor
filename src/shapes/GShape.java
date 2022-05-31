@@ -116,10 +116,6 @@ abstract public class GShape implements Serializable {
 		return this.shape;
 	}
 
-	public void setShape(Shape shape) {
-		this.shape = shape;
-	}
-
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
@@ -176,7 +172,7 @@ abstract public class GShape implements Serializable {
 	}
 
 	public void rotate(double angle, Point rotatePoint) {
-		// setToRation = radian, rotate = degree
+		// setToRotation = radian, rotate = degree
 		af.setToRotation(Math.toRadians(angle), rotatePoint.getX(), rotatePoint.getY());
 		this.shape = af.createTransformedShape(this.shape);
 	}

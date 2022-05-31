@@ -13,10 +13,6 @@ public class Clipboard {
 		this.clipshapes = new Vector<GShape>();
 	}
 
-	public void initTempShape() {
-		this.tempshapes.clear();
-	}
-	
 	public void setTempShape(GShape shape) {
 		this.tempshapes.add(shape);
 	}
