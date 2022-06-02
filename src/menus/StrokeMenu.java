@@ -41,12 +41,8 @@ public class StrokeMenu extends JMenu {
 
 		public void actionPerformed(ActionEvent e) {
 			EStrokeMenuItem eStrokeMenuItem = EStrokeMenuItem.valueOf(e.getActionCommand());
-			switch (eStrokeMenuItem) {
-			case eStroke:
+			if (eStrokeMenuItem == EStrokeMenuItem.eStroke) {
 				strokeFrame.setVisible(true);
-				break;
-			default:
-				break;
 			}
 		}
 	}

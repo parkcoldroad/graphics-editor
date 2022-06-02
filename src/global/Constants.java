@@ -181,7 +181,19 @@ public class Constants {
 		}
 
 	}
-	
+
+	public enum EZoomMenuItem {
+		eZoom("zoom");
+
+		private String text;
+		private EZoomMenuItem(String text) {
+			this.text = text;
+		}
+		public String getText() {
+			return this.text;
+		}
+	}
+
 	public enum EPopupMenu{
 		eCopy("Copy","copy"),
 		eCut("Cut","cut"),

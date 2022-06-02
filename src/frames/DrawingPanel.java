@@ -13,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.AffineTransform;
 import java.awt.image.ColorModel;
 import java.awt.image.MemoryImageSource;
 import java.awt.print.PageFormat;
@@ -50,6 +51,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
   private Image openimage;
   private Image pixelimage;
   private int index;
+  private double scale;
 
   private Vector<GShape> shapes;
   private GShape selectedShape;
@@ -96,6 +98,7 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
     this.openimage = null;
     this.pixelimage = null;
     this.index = 0;
+    this.scale = 1.0;
 
     MouseHandler mouseHandler = new MouseHandler();
     // button
@@ -260,10 +263,26 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
     this.repaint();
   }
 
+  public void zoomIn() {
+    this.scale = this.scale+0.5;
+    repaint();
+  }
+
+  public void zoomOut() {
+    this.scale = this.scale-0.5;
+    repaint();
+  }
+
   // Paint Components
   public void paint(Graphics g) {
     Graphics2D graphics2d = (Graphics2D) g;
     super.paint(g);
+
+    if (this.scale != 1.0) {
+      AffineTransform transform = new AffineTransform();
+      transform.scale(this.scale, this.scale);
+      graphics2d.setTransform(transform);
+    }
 
     if (this.openimage != null) {
       graphics2d.drawImage(openimage, 0, 0, this);

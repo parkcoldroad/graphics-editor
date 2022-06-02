@@ -1,10 +1,11 @@
 package frames;
-import javax.swing.JMenuBar;
 
+import javax.swing.JMenuBar;
 import menus.ColorMenu;
 import menus.EditMenu;
 import menus.FileMenu;
 import menus.StrokeMenu;
+import menus.ZoomMenu;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
@@ -14,6 +15,7 @@ public class MenuBar extends JMenuBar {
 	private EditMenu editMenu;
 	private ColorMenu colorMenu;
 	private StrokeMenu strokeMenu;
+	private ZoomMenu zoomMenu;
 
 	public MenuBar() {
 		this.fileMenu = new FileMenu();
@@ -27,6 +29,9 @@ public class MenuBar extends JMenuBar {
 		
 		this.strokeMenu = new StrokeMenu();
 		this.add(this.strokeMenu);
+
+		this.zoomMenu = new ZoomMenu();
+		this.add(this.zoomMenu);
 	}
 
 	public void associate(DrawingPanel drawingPanel) {
@@ -35,6 +40,7 @@ public class MenuBar extends JMenuBar {
 		this.editMenu.associate(this.drawingPanel);
 		this.colorMenu.associate(this.drawingPanel);
 		this.strokeMenu.associate(this.drawingPanel);
+		this.zoomMenu.associate(this.drawingPanel);
 	}
 
 	public void checkWindowSave() {
