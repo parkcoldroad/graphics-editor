@@ -135,7 +135,6 @@ public class DrawingPanel extends JPanel implements java.awt.print.Printable {
   }
 
   public boolean isUpdated() {
-    System.out.println(isUpdated);
     return isUpdated;
   }
 
